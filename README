@@ -1,0 +1,59 @@
+VERSION 0.6
+===========
+
+
+INTRODUCTION
+============
+
+The framework intended basically to be very light an simple. At the actual version, it's nearly sufficiant for blog
+(need to finish validators), and simple website. I feel it's a very comprehensible framework thanks to Inversion Of
+Control mandatory, no antipattern and explicit definition of class, function and variables.
+
+At this Stage, I worked 3 month (December 2009, June 2010, January 2011) on this framework.
+I made a first review of all code and comment to allow this release, It probably needs two more
+review. Unit test are sheduled for version 0.9, for learning reasons I didn't developed using test driver method.
+
+This Framework is actually used by the website www.incubatio.com
+
+
+PHILOSOPHY
+==========
+
+Every Framework has a philosophy here Incube want to bring fanatically:
+
+- A PERFECT Invertion of Control
+	$iceCream = New IceCream('chocolate');
+	$alice = New Person::factory('girl');
+	$alice->eat($iceCream);
+
+- Simplicity 
+	by naming variable, function and class by the most descriptible name possible
+
+- Performance 
+	by not making uselless control
+	using ternary operation
+	not make same treatments in differents place
+	using cache ... etc
+
+- Readability 
+	of the code by using only necassary comments
+
+- Flexibility, component are divided into:
+	o- brick (or cube) components usable alone 
+	o- and architectural components which have depandancies but for most of it, you can use  
+	custom component by simply using interfaces available in Incube/Pattern
+	The few component non-customisable have dynamic loading of attributes allowing deep customisation.
+	(foreach($options as $key => $value) $this->{"_$key"} = $value;
+	Flexibility also include database flexibility, not yet implemented, but research has been done on
+	ORM, particulary datamapper, now I need time I don't have to develop it.
+
+- Logical Debug
+	Exception are for the user and triggered by predictable error in prod: Resource not exitst 404, 
+	Application crash 403, DataBase Server deconnection, Server Maintenance.
+	No silent error triggering (@function), every error/warning/notice are good for the dev, 
+	error reporting should be off in production, and even if it was on, the application should not have any notice/warning or error.
+	
+- Security
+	Avoid Sql injection
+	provide BBCODE class to allow input restriction and avoid XSS
+	...

@@ -1,0 +1,58 @@
+// 0.1
+// - AutoLoader
+// - Controller && Actions
+// - View Object 
+// - Pattern
+ 
+// 0.2
+// - URI
+// - Router
+ 
+// 0.3
+// - Application Object
+// - Content types to action/view render
+// - File
+// - Config Loaders
+// - Exception
+ 
+// 0.4
+// - Application Filter for render
+// - HTML/Form
+// - View/Component/Grid
+// - Internationalisation
+ 
+// 0.5
+// - Application Checker for Authorisation
+// - ACL
+// - Auth
+// - Session
+ 
+>> 0.6
+ - Validator
+ - Route
+ - Localisation
+ 
+ 0.7
+ - HTTP Object
+ - Functional Test
+ - Inter-Application Interaction through HTTP
+ - Authenticity token
+
+ 0.8
+ - Dependancy Checker
+ - Application Setup Wizzard
+
+ 0.9
+ - Unit Tests
+ - compatibility PHP>5.0 
+ - Major Debug
+
+ 1.0
+ - Application/MVT
+ - Implement/Contribute to Incube ORM
+
+ 1.1
+ - compatibility PHP>5.0
+
+ 1.2
+ ...

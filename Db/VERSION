@@ -1,0 +1,39 @@
+Version
+=======
+
+// 0.1
+// - DataModel
+// - purposes
+// - Exceptions
+
+>> 0.2
+ - MySQL Driver
+ - CouchDb Driver
+
+ 0.3
+ - Mysql Adapter
+ - CouchDb Adapter
+
+ 0.4 
+ - Types
+ - Validation
+
+ 0.5
+ - DynamicMapper (DataMapper)
+
+ 0.6
+ - Object generator from database
+ - Database generator from objects
+
+ 0.7
+ - constraints
+ - transaction
+ - aggregates
+
+ 0.8
+ - Migration
+
+ 0.9
+ - Unit tests
+
+ 1.0
