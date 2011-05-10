@@ -86,8 +86,7 @@ class Incube_Application_MVC implements Incube_Pattern_IApplication {
 
 			//TOTHINK: shouldn't it be a Incube_Controller_Action::factory ?
 			// Prepare Action and check existance of ressource URIed (possible 404: Ressource not found)
-			$action = Incube_Controller::actionFactory($router->getFilePath('controller'), $this->_URI->getParam('action'));
-			$action->init($params);
+			$action = Incube_Controller::actionFactory($router->getFilePath('controller'), $this->_URI->getParam('action'), $params);
 
 			// Authorisation check: authentications, Acl, security token ... (possible 401: Unauthorised access)
 			$checked = $this->_runCheckers();
@@ -97,12 +96,11 @@ class Incube_Application_MVC implements Incube_Pattern_IApplication {
 		} catch (Exception $e) {
 			if(!$this->_exceptionController || !file_exists($router->getPath("controller") . DS . $this->_exceptionController)) throw $e;
 
-			$action = Incube_Controller::actionFactory($router->getPath("controller") . DS . $this->_exceptionController, "index");
 			$params["e"] = $e;
-			$action->init($params);
+			$action = Incube_Controller::actionFactory($router->getPath("controller") . DS . $this->_exceptionController, "index", $params);
 			$contents = Incube_Controller::act($action);
 		}
-		// TOTHINK: For better performances and more scalability, filter should be added from outside the app
+		// TOTHINK: For better performances and more flexibility, filter should be added from outside the app
 		$this->addFilter(new Incube_Filter_Tag($view));
 		echo $this->_runFilters($contents);
 	}

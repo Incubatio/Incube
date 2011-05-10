@@ -172,7 +172,7 @@ class Incube_HTML_Element {
 			break;
 			case "hidden":
 				$tag = "input";
-				$options = array("type" => "hidden");
+				$options = array("type" => "hidden", "value" => $values);
 			break;
 				//$validator = array(new Incube_Validator_TextField());
 		}

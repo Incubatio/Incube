@@ -2,6 +2,8 @@
 /** @author Incubatio 
   * @depandancies Incubatio_URI, Incube_Action_Exception
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
+	*
+	* TODO: Manage contentyp and header in a SingleTime class
   */
 class Incube_Controller_Action {
 
@@ -56,6 +58,9 @@ class Incube_Controller_Action {
 
 	/** @var string **/
 	protected $_contentType = "html";
+	
+	/** @var bool **/
+	protected $_IsContentTypeSet;
 
 	/** @param array $options */
 	public function __construct(array $options = array()) {
@@ -137,11 +142,12 @@ class Incube_Controller_Action {
 			list($actionName, $extention) = explode('.', $actionName);
 			if(array_key_exists($extention, $this->_contentTypes)) {
 				$this->_contentType(array($extention));
-				//header('Content-type: ' . $this->_contentTypes[$extention]);
+				header('Content-type: ' . $this->_contentTypes[$extention]);
 			} else $this->_contentType = array();
 		} else {
 			$this->_contentType = $this->_URI->getContentType();	
 		}
+		return $actionName;
 	}
 
 	/** @param string $contentType

@@ -18,12 +18,12 @@ class Incube_Router {
     
 	/** @var array */
 	// TODO: define default utls   
-    protected $_urls = array(
-	    "images" => "static/images",
-		"javascript" => "static/js",
-		"styles" => "static/css",
-		"files" => "static/selif"
-		);
+		protected $_urls = array(
+				"images" => "static/images",
+				"javascript" => "static/js",
+				"styles" => "static/css",
+				"files" => "static/selif"
+				);
     
 	/** Unified Resource names
 	  * @var array */
@@ -35,7 +35,7 @@ class Incube_Router {
     public function __construct($appsPath, array $URNs, array $options = array()) {
         $this->init($options);
         $this->_appPath		= $appsPath;
-		$this->_URNs	= $URNs;
+				$this->_URNs	= $URNs;
 
 
         //$this->_schemaParams = explode('/', $this->_URI->getScheme());

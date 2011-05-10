@@ -48,7 +48,7 @@ class Incube_ACL implements Incube_Pattern_IChecker {
 		}
 		if(array_key_exists($controller, $this->_rights)) {
 			foreach($this->_rights[$controller] as $keyAction => $group) {
-				if( ($keyAction == $action || $keyAction == "*") && ($group == "*" || $group == $this->_group || is_array($group) && in_array($this->_group, $group)))
+				if( ( $keyAction == "*" || preg_match("#$keyAction#", $action)) && ($group == "*" || $group == $this->_group || is_array($group) && in_array($this->_group, $group)))
 					return true;
 			}
 		}
