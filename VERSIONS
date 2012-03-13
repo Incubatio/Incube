@@ -11,13 +11,13 @@
 // 0.3
 // - Application Object
 // - Content types to action/view render
-// - File
+// - File Explorer
 // - Config Loaders
 // - Exception
  
 // 0.4
 // - Application Filter for render
-// - HTML/Form
+// - HTML + HTML_Form
 // - View/Component/Grid
 // - Internationalisation
  
@@ -31,9 +31,11 @@
  - Validator
  - Route
  - Localisation
+ - Event Driven
+ - Collection (Entity, Object-attributes Objects)
  
  0.7
- - HTTP Object
+ - HTTP Objects
  - Functional Test
  - Inter-Application Interaction through HTTP
  - Authenticity token
@@ -45,6 +47,8 @@
  0.9
  - Unit Tests
  - compatibility PHP>5.0 
+
+ alpha, beta, RCs
  - Major Debug
 
  1.0

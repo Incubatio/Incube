@@ -1,6 +1,6 @@
 <?php
 /** @author incubatio 
-  * @depandancy Incube_HTML
+  * @depandancy Incube_Router
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
 class Incube_View_Helper_Router {

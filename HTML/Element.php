@@ -55,11 +55,11 @@ class Incube_HTML_Element {
 			foreach($this->_options["value"] as $label => $value) {
 				$options = $this->_options;
 				$options["value"] = $value;
-				$html .= Incube_HTML::createTag($this->_tag, $options, $label);
+				$html .= Incube_Encoder_HTML::createTag($this->_tag, $options, $label);
 			}
 		// Generate single tag for a single element
 		} else  {
-			$html = Incube_HTML::createTag($this->_tag, $this->_options, $this->_label);
+			$html = Incube_Encoder_HTML::createTag($this->_tag, $this->_options, $this->_label);
 		}
 		return $html;
 	}
@@ -158,7 +158,7 @@ class Incube_HTML_Element {
 				$tag = "option";
 				foreach($values as $key => $value) {
 					$tmp = in_array($value, $default) ? "$tag selected": $tag; 
-					$label .= Incube_HTML::createTag($tag, array("value" => $key), $value);
+					$label .= Incube_Encoder_HTML::createTag($tag, array("value" => $key), $value);
 				}
 				$tag = "select";
 			break;

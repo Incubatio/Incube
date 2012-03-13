@@ -8,25 +8,25 @@
 class Incube_URI implements Incube_Pattern_IURI {
 
 	/** @var string */
-    protected $_scheme = /*http://myWebsite.com/(lang/)*/'controller/action'/*/id/1*/;
+  protected $_scheme = /*http://myWebsite.com/(lang/)*/'controller/action'/*/id/1*/;
 	
 	/** @var string */
-    protected $_separator = "/";
+  protected $_separator = "/";
 
 	/** @var string */
 	protected $_variableDelimiter = ":";
 
 	/** @var array */
-    protected $_params;
+  protected $_params;
 
 	/** @var array */
-    protected $_mainParams;
+  protected $_mainParams;
 
 	/** @var array */
-    protected $_unplannedParams;
+  protected $_unplannedParams;
 
 	/** @var string */
-    protected $_indexFile = 'index.php';
+  protected $_indexFile = 'index.php';
 
 	/** @var string */
 	protected $_headers;
@@ -66,6 +66,7 @@ class Incube_URI implements Incube_Pattern_IURI {
 
 	/** TODO: REVIEW getContentType Incube_Router_Request method
 	  * No priority, just check if Http request allow content-type
+    * TODO: ContentType belonf to a Request object not to a URI
 	  * @return mixed  */
 	public function getContentType() {
 		if ($this->HTTP_ACCEPT) {

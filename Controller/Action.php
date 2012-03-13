@@ -128,6 +128,17 @@ class Incube_Controller_Action {
 		$url = $this->_router->formatUrl($schemeParams, $params);
 		header("Location: $url");
 	}
+
+
+	/** @param string $controllerName
+	  * @param string $actionName
+	  * @param array  $params 
+    * @return string */
+	protected function _call($controllerName, $actionName, array $params = array()) {
+    $action = Incube_Controller::actionFactory($this->_router->getPath("controller") . DS . $controllerName . 'Controller.php', $actionName, $params);
+    return Incube_Controller::act($action);
+	}
+
 	/** @param array $params */
 	public function init(array $params) {
 		foreach($params as $key => $param) {
@@ -141,6 +152,7 @@ class Incube_Controller_Action {
 		if(preg_match("/\./", $actionName)) {
 			list($actionName, $extention) = explode('.', $actionName);
 			if(array_key_exists($extention, $this->_contentTypes)) {
+        // TOFIX: what is that thing below about contentType(...)
 				$this->_contentType(array($extention));
 				header('Content-type: ' . $this->_contentTypes[$extention]);
 			} else $this->_contentType = array();
@@ -162,8 +174,7 @@ class Incube_Controller_Action {
 	  * @param string $contents 
 	  * @return string */
 	public function render($actionName, $contents = null) {
-		switch(true)
-		{
+		switch(true) {
 			case in_array("html", $this->_contentType):
 			case in_array("xhtml+xml", $this->_contentType):
 			case in_array("xaml+xml", $this->_contentType):

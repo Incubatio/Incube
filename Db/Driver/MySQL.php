@@ -75,52 +75,52 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
 	  * @param string $query
       * @return mysql_query result */
     public function execute($query = null) {
-        //TODO: generate $this->$QUERYPARAMS from $query parse  ...
-        //if(!empty($this->_query) && isset($query)) {
-        // $query          = $this->generateQuery($query);
-        //}
+      //TODO: generate $this->$QUERYPARAMS from $query parse  ...
+      //if(!empty($this->_query) && isset($query)) {
+      // $query          = $this->generateQuery($query);
+      //}
 
-		$this->_host .= empty($this->_port) ? "" : ":$this->_port" ;
-		$this->initConnection($this->_host, $this->_login, $this->_password, $this->_db);
+      $this->_host .= empty($this->_port) ? "" : ":$this->_port" ;
+      $this->initConnection($this->_host, $this->_login, $this->_password, $this->_db);
 
-		//TODO: Should I put the content below inside a function ?
-        $isAffectRow = false;
-        if(isset($this->_query->action)) {
-            if(in_array($this->_query->action, array("insert", "update", "delete"))) {
-                $isAffectRow = true;
-            }
-            if($this->_query->action == "insert") {
-                $_query         = clone $this->_query;
-                $this->_query   = new StdClass();
-                $cols = $this->getColumnNames($_query->tables);
-                //                        $cols = array_fill_keys($cols, '');
-				$cols = array_combine($cols,array_fill(0,count($cols), ''));
-				foreach($_query->data as $key => $data) {
-					//Remove unamed and bad named fields
-					$data = array_intersect_key($data, $cols);
-					//Merge keys wit value, allow disorder in data
-					$_query->data[$key] = array_merge($cols, $data);
-				}
-				$this->_query = $_query;
-			}
-			$query = $this->getQuery();
-		}
+      //TODO: Should I put the content below inside a function ?
+      $isAffectRow = false;
+      if(isset($this->_query->action)) {
+        if(in_array($this->_query->action, array("insert", "update", "delete"))) {
+          $isAffectRow = true;
+        }
+        if($this->_query->action == "insert") {
+          $_query         = clone $this->_query;
+          $this->_query   = new StdClass();
+          $cols = $this->getColumnNames($_query->tables);
+          //                        $cols = array_fill_keys($cols, '');
+          $cols = array_combine($cols,array_fill(0,count($cols), ''));
+          foreach($_query->data as $key => $data) {
+            //Remove unamed and bad named fields
+            $data = array_intersect_key($data, $cols);
+            //Merge keys wit value, allow disorder in data
+            $_query->data[$key] = array_merge($cols, $data);
+          }
+          $this->_query = $_query;
+        }
+        $query = $this->getQuery();
+      }
 
 
-		//if(isset($query))
-		//Incube_Debug::dump($query);
+      //if(isset($query))
+      //Incube_Debug::dump($query);
 
-		if(empty($this->_connection)) {
-			$this->_host .= empty($this->_port) ? "" : ":$this->_port" ;
-			$this->initConnection($this->_host, $this->_login, $this->_password, $this->_db);
-		}
-		$result = mysql_query($query, $this->_connection);
+      if(empty($this->_connection)) {
+        $this->_host .= empty($this->_port) ? "" : ":$this->_port" ;
+        $this->initConnection($this->_host, $this->_login, $this->_password, $this->_db);
+      }
+      $result = mysql_query($query, $this->_connection);
 
-		//TODO:review the if
-		//If query failed trigger error
-		if(!$result && mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+      //TODO:review the if
+      //If query failed trigger error
+      if(!$result && mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
-		//If the query is not getting data, it will return if the action performed affected row or not
+      //If the query is not getting data, it will return if the action performed affected row or not
         return $isAffectRow ? mysql_affected_rows() > 0 : $result;
     }
 

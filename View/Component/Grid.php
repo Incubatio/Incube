@@ -37,7 +37,7 @@ class Incube_View_Component_Grid {
             foreach($params as $param) {
                 $paramsUrl[] = $param . DS . $data[$param];
             }
-            $this->_data[$key][$columnTitle] = Incube_HTML::createTag("a", array("href" => $temp . $actionUrl . DS . implode(DS,$paramsUrl)), $actionLabel);
+            $this->_data[$key][$columnTitle] = Incube_Encoder_HTML::createTag("a", array("href" => $temp . $actionUrl . DS . implode(DS,$paramsUrl)), $actionLabel);
         }
     }
 
