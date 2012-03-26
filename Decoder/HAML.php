@@ -1,9 +1,6 @@
 <?php
 class Incube_Decoder_HAML {
 
-
-
-  // TODO write regex
   // TODO: test if [0, 1] == {0 => 1}
   protected $_types =  array(
     array('indent' , '^\n( *)'),
@@ -90,7 +87,6 @@ class Incube_Decoder_HAML {
       }   
       if($lastLength === strlen($content)) {
         trigger_error('The parser failed to parse: "' . substr($content, 0, 100) . ' ..."', E_ERROR);  
-        //die;
       }   
     }
     //die;

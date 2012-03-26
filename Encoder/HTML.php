@@ -58,7 +58,7 @@ class Incube_Encoder_HTML extends Incube_Encoder_XML {
           }
           break;
         default:
-          var_dump($data);
+          //var_dump($data);
           trigger_error('Data described above are not supported by ' . __CLASS__, E_USER_ERROR);
           break;
       }
