@@ -1,37 +1,57 @@
 <?php
+namespace Incube;
 /** @author incubatio
   * @depandancies Incube_IArray, Incube_File_Explorer
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
 
-class Incube_Config {
+use Incube\FileExplorer;
+use Incube\OArray;
+
+class Config {
+
+    protected function _parse_xml($data) {
+        $data = (array) $data;
+        foreach($data as $key => $datum) {
+            if(is_object($datum) or is_array($datum)) {
+                $data[$key] = $this->_parse_xml($datum);
+            }
+        }
+        return $data;
+    }
 
     /** Load a configuration file
       * @param 	string 	$file
       * @param 	bool $allowModifications
       * @return Incube_Array
 	  * TODO: validates config files !!!!! */
-	public function getConfig($path, $assoc = true){
+	public function get_config($path, $assoc = true, $forced_type = false){
 
-		if(Incube_File_Explorer::exists($path)) {
+		if(FileExplorer::exists($path)) {
 			//$ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 			$path_parts = pathinfo($path);
-			$ext = array_key_exists("extension", $path_parts) ? strtolower($path_parts["extension"]) : "";
+			$ext = $forced_type ?  $forced_type : (array_key_exists("extension", $path_parts) ? strtolower($path_parts["extension"]) : "");
 			switch ($ext) {
 				case 'ini':
 				$data = parse_ini_file($path, true);
-				return ($assoc) ? $data : Incube_Array::arrayToIArray($data);
+                break;
 
 				case 'ser':
-				$data = unserialize(Incube_File_Explorer::read($path));
-				return ($assoc) ? $data : Incube_Array::arrayToIArray($data);
+				$data = unserialize(FileExplorer::read($path));
+                break;
 
 				case 'php':
-				include_once $path;
-				return ($assoc) ? $data : Incube_Array::arrayToIArray($data);
+                $data =	include_once $path;
+                break;
+
+				case 'xml':
+                $data = simplexml_load_file($path);
+                $data = $this->_parse_xml($data);	
+                break;
 
 				case '':
-				return null;
+				trigger_error(__class__ . " doesn't support file with no extention.");
+                break;
 
 				default:
 				trigger_error(__class__ . " doesn't support $ext filetype.");
@@ -44,19 +64,20 @@ class Incube_Config {
 				//you need to install PECL module, No Way I implement a "not very efficient" parser like symphony");
 			}
 		}
-		return false;
+        if(isset($data)) $data = $assoc ? $data : DataObject::array_to_data_object($data);
+		return isset($data) ? $data : false;
     }
 
     /** Load a configuration file
       *
       * @param 	string 	$folder
-      * @param 	bool 	$isAssoc
+      * @param 	bool 	$is_assoc
       * @return Incube_Array */
-    public function getConfigByFolder($folder, $isAssoc = true){
+    public function get_config_by_folder($folder, $is_assoc = true){
         
-        $files = Incube_File_Explorer::list_files($folder);
+        $files = FileExplorer::list_files($folder);
 
-        $config = $isAssoc ? array() : new stdClass();
+        $config = $is_assoc ? array() : new stdClass();
         foreach($files as $file) {
 			//PHP5.3 >>
             //$filename = basename($file, '.ini');
@@ -68,23 +89,23 @@ class Incube_Config {
 			$ext = array_key_exists("extension", $path_parts) ? "." . $path_parts["extension"]: "";
 			$filename = basename($file, $ext); 
 
-            if($configFile = $this->getConfig($folder . DS . $file, $isAssoc)) {
-				$isAssoc ? $config[$filename] = $configFile : $config->$filename = $configFile;
+            if($config_file = $this->get_config($folder . DIRECTORY_SEPARATOR . $file, $is_assoc)) {
+				$is_assoc ? $config[$filename] = $config_file : $config->set($filename, $config_file);
             }
-            unset($configFile);
+            unset($config_file);
         }
 
-        return $isAssoc ? Incube_Array::arrayToIArray($config) : $config;
+        return $is_assoc ? DataObject::array_to_data_object($config) : $config;
     }
 
 	/** Convert recursively arrays to Objects
 	  * @param array $assoc 
 	  * @return StdClass */
-	public function arrayToObject(array $assoc) {
+	public function array_to_object(array $assoc) {
 		$object = new stdClass();
 		foreach($assoc as $key => $value) {
 			$key = trim($key);
-			$object->$key = (is_array($value)) ? $this->arrayToObject($value) : $value; 
+			$object->$key = (is_array($value)) ? $this->array_to_object($value) : $value; 
 		}
 		return $object;
 	}
@@ -97,7 +118,7 @@ class Incube_Config {
         $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 		switch($ext) {
 			case "ser":
-				Incube_File_Explorer::write($path, serialize($data));
+				FileExplorer::write($path, serialize($data));
 			break;
 			default:
 				trigger_error(__class__ . " doesn't support $ext filetype.");
