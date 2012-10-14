@@ -192,7 +192,7 @@ class Incube_Controller_Action {
 				if(isset($contents)) return json_encode($contents);
 
 			default:
-				throw new Incube_Controller_Action_Exception("Wrong or Unsuppported HTTP answer format");
+				throw new Incube_Controller_Action_Exception("Please disable render, content-type is not suppported or result is empty");
 		}
 	}
 }

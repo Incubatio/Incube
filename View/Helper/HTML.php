@@ -47,4 +47,13 @@ class Incube_View_Helper_HTML extends Incube_View_Helper_Router {
 		$params['type'] = "text/javascript";
 		return $this->script($params);
 	}
+
+	/** @param array $params
+	  * @return string */
+	public function css($params) {
+		$uri = $this->url($params);
+        $params['rel']  = "stylesheet";
+        $params['type'] ="text/css";
+		return Incube_Encoder_HTML::createTag("link", $params);
+	}
 }
