@@ -19,13 +19,19 @@ class DataObject implements IDataObject{
 	/** @param string $key
 	  * return mixed */
 	public function get($key) {
-		return isset($this->_data[$key]) ? $this->_data[$key] : null;
+		return $this->has($key) ? $this->_data[$key] : null;
 	}
 
 	/** @param string $key
 	  * @param mixed $value */
 	public function set($key, $value) {
 		$this->_data[$key] = $value;
+	}
+
+	/** @param string $key
+	  * return boolean */
+	public function has($key) {
+		return array_key_exists($key, $this->_data);
 	}
 	
 	/** @return array */
