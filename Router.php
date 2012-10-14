@@ -5,7 +5,7 @@
 class Incube_Router {
 
     /** @var array */
-    protected $_directoryNames =  array("view" => "views", "layout" => "layouts", "controller" => "controllers");
+    protected $_directoryNames =  array('view' => 'views', 'layout' => 'layouts', 'controller' => 'controllers');
 
     /** @var string */
     protected $_appPath;
@@ -18,12 +18,12 @@ class Incube_Router {
     
 	/** @var array */
 	// TODO: define default utls   
-		protected $_urls = array(
-				"images" => "static/images",
-				"javascript" => "static/js",
-				"styles" => "static/css",
-				"files" => "static/selif"
-				);
+	protected $_urls = array(
+			'images' => 'static/images',
+			'javascript' => 'static/js',
+			'styles' => 'static/css',
+			'files' => 'static/selif',
+			);
     
 	/** Unified Resource names
 	  * @var array */
@@ -35,21 +35,20 @@ class Incube_Router {
     public function __construct($appsPath, array $URNs, array $options = array()) {
         $this->init($options);
         $this->_appPath		= $appsPath;
-				$this->_URNs	= $URNs;
+        $this->_URNs	= $URNs;
 
 
         //$this->_schemaParams = explode('/', $this->_URI->getScheme());
 		//TOTHINK: if optional directory name are not define, we check the architecture dir exists ?, it exists we use this conf.
 		//TOTHINK: Check if implementation of module is usefull
-        if(array_key_exists("module", $URNs)) {
-            $this->_conteneurDir = $URNs["module"];
+        if(array_key_exists('module', $URNs)) {
+            $this->_conteneurDir = $URNs['module'];
             //$this->_names['module'] = $URNs[$moduleDir];
         } else {
-            $this->_conteneurDir = $this->_directoryNames["controller"];
+            $this->_conteneurDir = $this->_directoryNames['controller'];
         }
 
-
-        $this->_files['controller'] = $URNs["controller"] . ucfirst("controller") . '.php';
+        $this->_files['controller'] = $URNs['controller'] . ucfirst('controller') . '.php';
         //$this->_view = $this->getDirName('view') . DS . $this->_names['action'] . '.phtml';
 
     }
@@ -101,14 +100,13 @@ class Incube_Router {
       * @param array $params
       * @return string */
     public function formatUrl(array $schemeParams = array(), array $params = array()) {
-		$schemeModel = array_keys($this->_URNs);
         $endUrl = array();
-        foreach($schemeModel as $label) {
+        foreach(array_keys($this->_URNs) as $label) {
             $endUrl[] = array_key_exists($label, $schemeParams) ? $schemeParams[$label] : $this->_URNs[$label];
         }
         foreach($params as $key => $param) {
             $endUrl[] = "$key/$param";
         }
-        return $this->_baseUrl . DS . implode(DS, $endUrl);
+        return '/' . implode('/', $endUrl);
     }
 }

@@ -64,6 +64,13 @@ class Incube_Filter_Tag implements Incube_Pattern_IFilter {
 		return $this->_view->js($params);
 	}
 
+	/** @param string $file
+	  * @return string */
+	public function css($file) {
+		$params["href"] = $this->_view->url("styles") . DS . $file;
+		return $this->_view->css($params);
+	}
+
 	/** @param string $label
 	  * @param mixed $params
 	  * @return string */

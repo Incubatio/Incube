@@ -108,50 +108,54 @@ class Incube_HTML_Element {
 	  *	@param string $type
 	  * @param string|array (for checkboxs) $default 
 	  * @return Incube_Element */
-	public static function factory($name, $values, $type = null, $default = array()) {
+	public static function factory($name, $values, $options = array(), $default = array()) {
+        $options = (array) $options;
 		$default = (array) $default;
-		if(!$type) {
+		if(!array_key_exists('type', $options)) {
 			if(is_bool($values)) $type = "bool";
 			elseif(is_float($values)) $type = "float";
 			elseif(is_numeric($values)) $type = "int";
 			elseif(is_string($values)) $type = "string";
 			elseif(is_array($values)) $type = "select";
 			else trigger_error("unidentified type of data, can't dynamically create this element", E_USER_ERROR);
-		}
+		} else {
+            $type = $options['type'];
+            unset($options['type']);
+        }
 		$label = null;
 		$validators = array();
 		$filters = array();
 		switch($type) {
 			case "string":
 				$tag = "input";
-				$options = array("type" => "text", "value" => $values);
+				$options2 = array("type" => "text", "value" => $values);
 				$filters[] = new Incube_Filter_HTML();
 			break;
 			case "password":
 				$tag = "input";
-				$options = array("type" => "password"); 
+				$options2 = array("type" => "password"); 
 				//$validator = new Incube_Validator_Regex();
 			break;
 			case "text":
 				$tag = "textarea";
-				$options = array("type" => "text", "style" => "width:100%; min-height:150px;");
+				$options2 = array("type" => "text", "style" => "width:100%; min-height:150px;");
 				//$label = $values;
 				$label = $values;
 				$filters[] = new Incube_Filter_HTML();
 			break;
 			case "bool":
 				$tag = "input";
-				$options = array("type" => "checkbox", "value" => $values);
+				$options2 = array("type" => "checkbox", "value" => $values);
 				$validator[] = new Incube_Validator_Number("bool");
 			break;
 			case "int":
 				$tag = "input";
-				$options = array("type" => "text", "value" => $values);
+				$options2 = array("type" => "text", "value" => $values);
 				$validators[] = new Incube_Validator_Number("int");
 			break;
 			case "float":
 				$tag = "input";
-				$options = array("type" => "text", "value" => $values);
+				$options2 = array("type" => "text", "value" => $values);
 				$validators[] = new Incube_Validator_Number("float");
 			break;
 			case "select":
@@ -164,18 +168,19 @@ class Incube_HTML_Element {
 			break;
 			case "radio":
 				$tag = "input";
-				$options = array("value" => $values, "type" => "radio");
+				$options2 = array("value" => $values, "type" => "radio");
 			break;
 			case "checkbox":
 				$tag = "input";
-				$options = array("value" => $values, "type" => "checkbox");
+				$options2 = array("value" => $values, "type" => "checkbox");
 			break;
 			case "hidden":
 				$tag = "input";
-				$options = array("type" => "hidden", "value" => $values);
+				$options2 = array("type" => "hidden", "value" => $values);
 			break;
 				//$validator = array(new Incube_Validator_TextField());
 		}
+        $options = array_merge($options, $options2);
 		$options["name"] = "data[$name]";
 		//TODO: add validators
 		$element =  new Incube_HTML_Element($tag, $options, $label);

@@ -65,9 +65,8 @@ class Incube_HTML_Form {
 	  * @param array $options
 	  * @return string */
 	public function add($name, $value, array $options = array()) {
-		$type = array_key_exists("type", $options) ? $options["type"] : null;	
 		$default = array_key_exists("default", $options) ? $options["default"] : null;	
-		$this->_elements->$name = Incube_HTML_Element::factory($name, $value, $type, $default);	
+		$this->_elements->$name = Incube_HTML_Element::factory($name, $value, $options, $default);	
 		if(array_key_exists("label", $options)) $this->_labels->$name = $options["label"];
 		return $this->_elements->$name;
 	}
@@ -89,7 +88,9 @@ class Incube_HTML_Form {
 	  * @return array */
 	public function filterData(array $data) {
 		foreach($data as $key => $value) {
-			$data[$key] = $this->_elements->$key->filter($value);
+            if(isset($this->_elements->$key)) {
+                $data[$key] = $this->_elements->$key->filter($value);
+            }
 		}
 		return $data;
 	}

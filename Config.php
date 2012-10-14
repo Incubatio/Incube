@@ -27,10 +27,10 @@ class Incube_Config {
 				return ($assoc) ? $data : Incube_Array::arrayToIArray($data);
 
 				case 'php':
-				include_once $path;
+				$data = include_once $path;
 				return ($assoc) ? $data : Incube_Array::arrayToIArray($data);
 
-				case '':
+				case 'swp':
 				return null;
 
 				default:

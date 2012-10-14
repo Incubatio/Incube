@@ -49,7 +49,7 @@ class Incube_View_Component_Grid {
 			case "xhtml":
 				foreach($this->_data as $key => $value) {
 					$firstKey = key($value);
-					$htmlObject = Incube_HTML_Element::factory($firstKey, $value[$firstKey], "checkbox");
+					$htmlObject = Incube_HTML_Element::factory($firstKey, $value[$firstKey], array('type' => "checkbox"));
 					//Incube_Debug::dump($htmlObject->render());die;
 
 					$this->_data[$key][$firstKey] = $htmlObject->render();

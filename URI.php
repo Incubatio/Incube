@@ -34,11 +34,10 @@ class Incube_URI implements Incube_Pattern_IURI {
 	/** @param string $URI
 	  * @param array options */
     public function __construct($URI, array $options = array()) {
-        
+
          $this->initOptions($options);
 
          $params = explode($this->_separator, $URI);
-         unset($params[0]);
 
         $this->_params = $this->_parseParams($params);
     }
@@ -89,20 +88,20 @@ class Incube_URI implements Incube_Pattern_IURI {
         $params = array_values($params);
         $mainParams = array();
         foreach(explode($this->_separator, $this->_scheme) as $key => $value) {
+            if(empty($value)) continue;
 			if(substr($value, 0, 1) === $this->_variableDelimiter) {
 				$value = substr($value, 1);
 				if(empty($params[$key])){
-					if(empty($this->_default->$value)) throw new Incube_Exception("Dynamic Params missing");
+					if(!array_key_exists($value, $this->_default)) throw new Incube_Exception("Dynamic Params:$value is missing");
 					else $mainParams[$value] = $this->_default[$value];
 				} else {
-					//Incube_debug::dump(isset(preg_match("/" . $this->_validation->$value . "/", $params[$key])));
 					if(isset($this->_validation[$value]) AND !preg_match("/" . $this->_validation[$value] . "/", $params[$key])) 
 						throw new Incube_Exception("Wrong URL format");
 					$mainParams[$value] = $params[$key];
 				}
 			} else {
 				if(!empty($params[$key])){
-					if($params[$key] != $value) throw new Incube_Exception("Static Params missing");
+					if($params[$key] != $value) throw new Incube_Exception("Static Params: $key is missing");
 				}
 				$mainParams[$value] = $value;
 			}
