@@ -1,11 +1,11 @@
 <?php
 namespace Incube;
-
-use Incube\Pattern\IDataObject;
 /** @author incubatio
-  * @depandancy \Incube\Pattern\IDataObject
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
+
+use Incube\Pattern\IDataObject;
+
 class DataObject implements IDataObject{
 
 	/** @var array */

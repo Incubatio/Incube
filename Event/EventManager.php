@@ -1,9 +1,9 @@
 <?php
+namespace Incube\Event;
 /** @author incubatio
-  * @depandancy Incube_Pattern_IArray
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
-class Incube_Event_Manager {
+class EventManager {
 
     protected $_events    = array();
     protected $_listeners = array();
@@ -11,16 +11,16 @@ class Incube_Event_Manager {
     protected $_separator = '.';
 
     /** trigger an event to list of events, call a listener method with an event as param 
-     * 
-     * @param string $eventName
-     * @param mixed $target 
-     * @param array $argv
-     *
-     * TODO: add callback support
-     * @param mixed $callback
-     *
-     * @return Multee\Event\EventManager 
-     */
+      * 
+      * @param string $eventName
+      * @param mixed $target 
+      * @param array $argv
+      *
+      * TODO: add callback support
+      * @param mixed $callback
+      *
+      * @return EventManager 
+      */
     public function trigger($eventName, $target = null, $argv = array(), $callback = null) {
         $names = array();
         if(is_object($target)) {
@@ -28,7 +28,7 @@ class Incube_Event_Manager {
             do {
                 $names[] = $class . $this->_separator . $eventName;
             } while ($class = get_parent_class($class)); 
-        } else $names[] = array($eventName);
+        } else $names[] = $eventName;
 
         foreach($names as $name) {
             if (array_key_exists($name, $this->_events)) {
@@ -46,13 +46,13 @@ class Incube_Event_Manager {
     } 
 
     /** add an event to list of events, event represented by association of listeners and callable
-     * 
-     * @param string $eventName
-     * @param array('objectName', 'methodName') $callable
-     * @param int $priority
-     *
-     * @return Multee\Event\EventManager 
-     */
+      * 
+      * @param string $eventName
+      * @param array('objectName', 'methodName') $callable
+      * @param int $priority
+      *
+      * @return EventManager 
+      */
     public function attach($event, $callable, $priority = 1) {
         if (is_array($event)) $event = implode($this->_separator, $event);
         if (is_array(current($callable))) { 
@@ -66,34 +66,34 @@ class Incube_Event_Manager {
     }
 
     /** Get a list of events, event represented by association of listeners and callable
-     * 
-     * @return array
-     */
+      * 
+      * @return array
+      */
     public function getEvents() {
         return $this->_events;
     }
 
     /** Set a list of events, event represented by association of listeners and callable
-     * 
-     * @return Multee\Event\EventManager 
-     */
+      * 
+      * @return EventManager 
+      */
     public function setEvents(array $events) {
         $this->_events = $events;
         return $this;
     }
 
     /** 
-     * @return array 
-     */
+      * @return array 
+      */
     public function getOptions() {
         return $this->_options;
     }
 
     /** 
-     * @param array $options
-     *
-     * @return Multee\Event\EventManager 
-     */
+      * @param array $options
+      *
+      * @return EventManager 
+      */
     public function setOptions(array $options) {
         $this->_options = $options;
         return $this;

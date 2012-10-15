@@ -1,9 +1,12 @@
 <?php
-
+namespace Incube\Event;
 /** @author incubatio 
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
-abstract class Incube_Event_AListener implements Incube_Event_IListener {
+
+use Incube\Event\IListener;
+
+abstract class AListener implements IListener {
 
     /** @var array **/
     protected static $_events = array();

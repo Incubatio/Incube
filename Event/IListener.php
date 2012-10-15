@@ -1,8 +1,10 @@
 <?php
+namespace Incube\Event;
 /** @author incubatio 
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
-interface Incube_Event_IListener {
+
+interface IListener {
 	/** @return array $value */
     public static function getEvents();
 
