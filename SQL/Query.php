@@ -1,8 +1,10 @@
 <?php
+namespace Incube\SQL;
+
 /** @author incubatio
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
-class Incube_SQL_Query {
+class Query {
 
 	const DELETE    = "DELETE FROM <tables> <where>";
 	const DROP      = "DROP <type> <name>";
@@ -47,7 +49,7 @@ class Incube_SQL_Query {
 	protected $_nonSecureAttrList = array("where", "having");
 
 	public function __construct() {
-		$this->_query = new StdClass;
+		$this->_query = new \StdClass;
 	}
 
 	/** @return Incube_SQL_Query */
@@ -197,7 +199,7 @@ class Incube_SQL_Query {
 
 		}
 		$this->_lastQuery = $schema;
-		$this->_query = new StdClass;
+		$this->_query = new \StdClass;
 
 		return trim($schema);
 	}

@@ -7,7 +7,7 @@ namespace Incube;
 class Resource {
 
     /** @var array */
-    protected $_resources;
+    protected $_resources = array();
 
     /** @param string $resource_name 
       * @return object
@@ -17,7 +17,7 @@ class Resource {
             $method = 'init_' . $resource_name;
             if(method_exists($this, $method)) {
                 $this->_resources[$resource_name] = $this->$method();
-            } else throw new Exception('init_' . $resource_name . ' does not exist');
+            } else throw new \Exception('init_' . $resource_name . ' does not exist');
         }
         return $this->_resources[$resource_name];
     }

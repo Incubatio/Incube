@@ -1,26 +1,28 @@
 <?php
+namespace Incube;
 /** @author incubatio 
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
-class Incube_View {
+
+class View {
 
     /** @var string */
     protected $_path = "";
 
     /** @var string */
-    protected $_viewExtention = ".phtml";
+    protected $_view_extention = ".phtml";
 
     /** @var string */
-    protected $_fileName;
+    protected $_file_name;
 
 	/** @var Class_I18n */
 	protected $_i18n;
 
 	/** @var string */
-	protected $_layoutName;
+	protected $_layout_name;
 
-	/** @var viewHelpers */
-	protected $_viewHelpers = array();
+	/** @var view_helpers */
+	protected $_view_helpers = array();
 
     /** @param array $options */
     public function __construct(array $options = array()) {
@@ -29,16 +31,16 @@ class Incube_View {
         }
     }
 
-    /** @param string $fileName
+    /** @param string $file_name
       * @return string
       */
-    public function render($fileName = null) {
-        if(!$fileName) $fileName = $this->_fileName;
-        $filePath = $this->_path . DS . $fileName . $this->_viewExtention;
+    public function render($file_name = null) {
+        if(!$file_name) $file_name = $this->_file_name;
+        $filePath = $this->_path . DS . $file_name . $this->_view_extention;
 		$contents = $this->_include($filePath);
 
-		if($this->_layoutName) {
-			$layoutPath = $this->_layoutPath . DS . $this->_layoutName . $this->_viewExtention;
+		if($this->_layout_name) {
+			$layoutPath = $this->_layoutPath . DS . $this->_layout_name . $this->_view_extention;
 			$this->contents = $contents;
 			$contents = $this->_include($layoutPath);
 		}
@@ -47,10 +49,10 @@ class Incube_View {
 
     /** @param string $contents
       * @return string */
-    public function renderText($contents) {
+    public function render_text($contents) {
 
-		if($this->_layoutName) {
-			$layoutPath = $this->_layoutPath . DS . $this->_layoutName . $this->_viewExtention;
+		if($this->_layout_name) {
+			$layoutPath = $this->_layoutPath . DS . $this->_layout_name . $this->_view_extention;
 			$this->contents = $contents;
 			$contents = $this->_include($layoutPath);
 		}
@@ -68,37 +70,37 @@ class Incube_View {
 	}  
 
 
-    /** @param string $fileName */
-    public function setFileName($fileName) {
-        $this->_fileName = $fileName;
+    /** @param string $file_name */
+    public function set_file_name($file_name) {
+        $this->_file_name = $file_name;
     }
 
-    /** @param string $fileName */
-	public function setLayout($fileName) {
-		$this->_layoutName = $fileName;
+    /** @param string $file_name */
+	public function set_layout($file_name) {
+		$this->_layout_name = $file_name;
 	}
 	
 	/** @return bool */
-	public function isLayout() {
-		return !empty($this->_layoutName);
+	public function is_layout() {
+		return !empty($this->_layout_name);
 	}
 
 	/** Clean render by unseting view and layout */
-	public function noRender() {
-		$this->setLayout(null);
-		$this->setFileName(null);
+	public function no_render() {
+		$this->set_layout(null);
+		$this->set_file_name(null);
 	}
 
-	public function addViewHelper($viewHelper) {
-		$this->_viewHelpers[] = $viewHelper;
+	public function add_view_helper($view_helper) {
+		$this->_view_helpers[] = $view_helper;
 	}
 
     /** @param string $method 
 	  * @param array
 	  * return mixed */
 	public function __call($method, $args) {
-		foreach($this->_viewHelpers as $viewHelper) {
-			if(method_exists($viewHelper, $method)) return call_user_func_array(array($viewHelper, $method), $args);
+		foreach($this->_view_helpers as $view_helper) {
+			if(method_exists($view_helper, $method)) return call_user_func_array(array($view_helper, $method), $args);
 		}
 	//	debug_print_backtrace();
 		//TODO: Ameliorer le bug tracking
@@ -107,20 +109,20 @@ class Incube_View {
 
 
     /** @return string */
-    public function getFileName() {
-        return $this->_fileName;
+    public function get_file_name() {
+        return $this->_file_name;
     }
 
-    /** @param string $key
-      * @param string $path */
-    public function addPath($key, $path) {
-        $this->_path[$key] = $path;
+    /** @return string */
+    public function get_path() {
+        return $this->_path;
     }
 
-    /** @param array $paths */
-    public function addPaths(array $paths) {
-        foreach($paths as $key => $path) {
-            $this->addPath($key, $path);
-        }
+    /** @param string $path 
+      * @return View
+      */
+    public function set_path($path) {
+        $this->_path = $path;
+        return $this;
     }
 }

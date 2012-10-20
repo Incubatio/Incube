@@ -1,4 +1,5 @@
 <?php
+namespace Incube\Db\Driver;
 /** @author incubatio 
   * @depandancy Incube_SQL_Query
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
@@ -6,7 +7,11 @@
   * TODO: Implements Mysql particularities
   * TOTHINK: Put Connection into a separate Object e.g. Mysql/Connection
   */
-class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
+
+use \Incube\Db\PdoConnection,
+    Pdo;
+
+class MYSQL extends \Incube\SQL\Query {
 
     const DELETE    = "DELETE FROM <tables> <where>";
     const DROP      = "DROP <type> <name>";
@@ -19,32 +24,33 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
 
     /** @var string
      * Default security is addslashes just in case */
-    protected $_secureFunction = "mysql_real_escape_string";
+    protected $_secure_function = "PDO::quote";
 
-    /** @var MysqlID */
+    /** @var connection */
     protected $_connection;
 
-    /** @var string */
-    protected $_host = "localhost";
-
-    /** @var string */
-    protected $_login = "root";
-
-    /** @var string */
-    protected $_password = "";
-
-    /** @var string */
-    protected $_db;
-
     /** @param array options */
-    public function __construct($options = array()) {
+    public function __construct(PdoConnection $connection, $options = array()) {
         parent::__construct();
+        $this->_connection = $connection;
         //$this->init($options);
     }
 
 	/** @param string $db */
-    public function setDb($db) {
+    public function set_db($db) {
         $this->_db = $db;
+        return $this;
+    }
+
+	/** @param string $connection */
+    public function get_connection() {
+        return  $this->_connection;
+    }
+
+	/** @param string $connection */
+    public function set_connection($connection) {
+        $this->_connection = $connection;
+        return $this;
     }
 
     /** @param array $options */
@@ -52,23 +58,6 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
         foreach($options as $key => $option) {
             $this->{"_$key"} = $option;
         }
-    }
-
-    /** @param string $host
-      * @param string $login
-      * @param string $password 
-	  * @param string db */
-    public function initConnection($host="localhost", $login="root", $password="", $db = null) {
-        if(!$this->_connection = mysql_connect($host, $login, $password)) {
-            throw new Incube_Db_Exception("connection to database at $host with $login FAILED");
-        }
-        if (!is_null($db)) {
-            $this->selectDb($db);
-        }
-    }
-
-    public function selectDb($db) {
-        mysql_select_db($db);
     }
 
     /** Execute the mysql query
@@ -81,18 +70,17 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
       //}
 
       $this->_host .= empty($this->_port) ? "" : ":$this->_port" ;
-      $this->initConnection($this->_host, $this->_login, $this->_password, $this->_db);
 
       //TODO: Should I put the content below inside a function ?
-      $isAffectRow = false;
+      $is_affect_row = false;
       if(isset($this->_query->action)) {
         if(in_array($this->_query->action, array("insert", "update", "delete"))) {
-          $isAffectRow = true;
+          $is_affect_row = true;
         }
         if($this->_query->action == "insert") {
           $_query         = clone $this->_query;
-          $this->_query   = new StdClass();
-          $cols = $this->getColumnNames($_query->tables);
+          $this->_query   = new \StdClass();
+          $cols = $this->get_column_names($_query->tables);
           //                        $cols = array_fill_keys($cols, '');
           $cols = array_combine($cols,array_fill(0,count($cols), ''));
           foreach($_query->data as $key => $data) {
@@ -107,35 +95,25 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
       }
 
 
-      //if(isset($query))
-      //Incube_Debug::dump($query);
-
-      if(empty($this->_connection)) {
-        $this->_host .= empty($this->_port) ? "" : ":$this->_port" ;
-        $this->initConnection($this->_host, $this->_login, $this->_password, $this->_db);
+      $db = $this->_connection->get_instance();
+      try {
+          $result = $db->query($query);
+      } catch(PDOException $e) {
+          trigger_error('An error occured' . $e->getMessage(), E_USER_WARNING);
       }
-      $result = mysql_query($query, $this->_connection);
 
-      //TODO:review the if
-      //If query failed trigger error
-      if(!$result && mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-
-      //If the query is not getting data, it will return if the action performed affected row or not
-        return $isAffectRow ? mysql_affected_rows() > 0 : $result;
+        return $is_affect_row ? $ $db->rowCount() > 0 : $result;
     }
 
 
     /** Return the result of a request under an associative array
       * @param Mysql_Result $result
       * @return Array */
-    public function fetchArray($result = null) {
-        if(empty($result)) {
-            $result = $this->execute();
-        }
+    public function fetch_array($result = null) {
+        if(empty($result)) $result = $this->execute();
         $rows = array();
         if($result) {
-            while($row = mysql_fetch_assoc($result))
-                $rows[] = $row;
+            $rows = $result->fetchAll(PDO::FETCH_ASSOC);
         }
         return $rows;
     }
@@ -144,13 +122,14 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
       * @param string $key
 	  * @param Mysql_result $result
       * @return Array*/
-    public function fetchArrayBy($key, $result = null) {
+    public function fetch_array_by($key, $result = null) {
         if(empty($result)) {
             $result = $this->execute();
+            die;
         }
         $rows = array();
         if($result) {
-            while($row = mysql_fetch_assoc($result)) {
+            while($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $k = $row[$key];
                 unset($row[$key]);
                 $rows[$k] = $row;
@@ -163,12 +142,10 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
     /** Return only one column from the query
       * @param <int||string> $col
       * @return array */
-    public function fetchColumn($col = 0) {
-        $result = $this->execute();
+    public function fetch_column($col = 0, $result = null) {
+        if(empty($result)) $result = $this->execute();
         if($result) {
-            while($row = mysql_fetch_row($result)) {
-                $rows[] = $row[$col];
-            }
+            $rows = $result->fetchAll(PDO::FETCH_COLUMN, $col); 
         }
 
         /* if(is_int($col)) {
@@ -177,24 +154,11 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
         return $rows;
     }
 
-    public function fetchResult() {
-        $result = $this->execute();
-        if($result) {
-            while($row = mysql_fetch_row($result)) {
-                $rows[] = $row[0];
-            }
-        }
-
-        /* if(is_int($col)) {
-           $row = array_values($row);
-           }*/
-        return $rows[key($rows)];
-    }
     /** Return only one column from the query
       * @param <int||string> $key
       * @return array */
-    public function fetchColumnBy($key) {
-        $rows = $this->fetchArrayBy($key);
+    public function fetch_column_by($key, $result = null) {
+        $rows = $this->fetch_array_by($key);
         foreach($rows as $key => $row) {
             $rows[$key] = $row[key($row)];
         }
@@ -202,18 +166,10 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
     }
 
     /** @return array */
-    public function fetchOne() {
-        $result = $this->execute();
-        return $result ? mysql_fetch_assoc($result) : $result;
+    public function fetch_one($result = null) {
+        if(empty($result)) $result = $this->execute();
+        return $result ? $result->fetch(PDO::FETCH_ASSOC) : $result;
     }
-
-    public function close() {
-        if(!empty($this->_connection)) {
-            mysql_close($this->_connection);
-            $this->_connect = NULL;
-        }
-    }
-
 
 
    /** Ancient version of insert, keeped to code next insert with mysql specificities
@@ -239,7 +195,7 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
             $updates = array();
             foreach($cols as $key => $col) {
                 if(array_key_exists($key, $values)) {
-                    $updates[$col] = "$col = $values[$key]";
+                    $updates[$col] = "$col = ". $values[$key];
                 }
             }
             unset($updates['id']);
@@ -258,7 +214,7 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
         //$this->_query = "select * from information_schema.tables where table_name='$table'";
         //$this->_query = "SELECT * FROM information_schema";
         $this->getInformationsFromInformationSchema("COLUMN_NAME", "columns")->where("table_name", "postits");
-        $results = $this->fetchArray();
+        $results = $this->fetch_array();
         foreach($results as $key => $result) {
         $columns[$key] = $result["COLUMN_NAME"];
         } */
@@ -266,7 +222,7 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
         $this->show('COLUMNS')->from($table);
         //$query = $this->getQuery();
         //$result = $this->execute($query);
-        $results = $this->fetchArray();
+        $results = $this->fetch_array();
         foreach($results as $key => $column) {
             $columns[$key] = $column["Field"];
         }
@@ -281,7 +237,7 @@ class Incube_Db_Driver_MySQL extends Incube_SQL_Query {
         //$this->_query = "select * from information_schema.columns where table_name='$table'";
         $this->getInformationsFromInformationSchema("*")->from("tables")->where(array("table_name", "postits"));
         var_dump($this->_query);die;
-        return $this->fetchArray();
+        return $this->fetch_array();
     }
 
    /** @param string $selection
