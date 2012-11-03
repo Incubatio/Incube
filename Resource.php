@@ -9,14 +9,11 @@ class Resource {
     /** @var array */
     protected $_resources = array();
 
-<<<<<<< HEAD
     /**@param array $resources */
     public function __construct(array $resources = array()) {
         $this->_resources = $resources;
     }
 
-=======
->>>>>>> 50cec862db1420e3d6239e3c3115b6ee50a8dada
     /** @param string $resource_name 
       * @return object
       */
