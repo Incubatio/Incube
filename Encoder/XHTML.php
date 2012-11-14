@@ -32,7 +32,7 @@ class Incube_Encoder_HTML extends Incube_Encoder_XML {
         )
   );
 
-  protected $_indentSize = 4;
+  protected static $_indentSize = 4;
 
   /** @param array $data
    * @return string */
@@ -42,7 +42,6 @@ class Incube_Encoder_HTML extends Incube_Encoder_XML {
       case array_key_exists('doctype', $data):
         $version = array_key_exists('version', $data) ? $data['version'] : '1.1'; 
         $encoding = array_key_exists('encoding', $data) ? $data['encoding'] : ''; 
-        return
     }
 
 

@@ -21,7 +21,7 @@ class Resource {
         if(!array_key_exists($resource_name, $this->_resources)) {
             $method = 'init_' . $resource_name;
             if(method_exists($this, $method)) {
-                $this->_resources[$resource_name] = $this->$method();
+                $this->_resources[strtolower($resource_name)] = $this->$method();
             } else throw new \Exception('init_' . $resource_name . ' does not exist');
         }
         return $this->_resources[$resource_name];

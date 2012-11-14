@@ -25,7 +25,9 @@ class DataObject implements IDataObject{
 	/** @param string $key
 	  * @param mixed $value */
 	public function set($key, $value) {
-		$this->_data[$key] = $value;
+		if(is_null($value)) unset($this->_data[$key]);
+        else $this->_data[$key] = $value;
+        return $this;
 	}
 
 	/** @param string $key
