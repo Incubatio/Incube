@@ -1,8 +1,9 @@
 <?php
+namespace Incube\Encoder;
 /** @author incubatio 
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
-class Incube_Encoder_XML {
+class XML {
 
   //TOFIX: doctype should be in HTML class as constants or something
   // List based on http://www.w3.org/QA/2002/04/valid-dtd-list.html + HAML spec (for XHTML 1.2 mobile)
@@ -24,7 +25,7 @@ class Incube_Encoder_XML {
 	  * @param array $params
 	  * @param string label *
 	  * @return string */
-	public static function createTag($tagName, array $params = array(), $content = null, $indent = 0) {
+	public static function create_tag($tagName, array $params = array(), $content = null, $indent = 0) {
     $content = trim($content);
     $element = self::_indent($indent) . "<$tagName";
     foreach($params as $key => $value) {
@@ -37,7 +38,7 @@ class Incube_Encoder_XML {
       $element[] = self::_indent($indent) . "</$tagName>";
       $element = implode($element, "\n");
     } else { 
-      $element .= isset($content) ? ">$content</$tagName>" : "/>";
+      $element .= !is_null($content) ? ">$content</$tagName>" : "/>";
     }
     return $element;
 	}   
@@ -56,7 +57,7 @@ class Incube_Encoder_XML {
         case array_key_exists('tag', $data):
           $node = $data['tag'];
           unset($data['tag']);
-          $result = Incube_Encoder_XML::createTag($tag, $data, $content, $indent);
+          $result = Incube_Encoder_XML::create_tag($tag, $data, $content, $indent);
           break;
         default:
           var_dump($data);

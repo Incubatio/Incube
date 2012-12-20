@@ -23,21 +23,21 @@ class Incube_View_Helper_HTML extends Incube_View_Helper_Router {
 		} else { 
 			$paramsUrl = $params;
 		}
-		return Incube_Encoder_HTML::createTag("a", $paramsUrl, $label);
+		return Incube_Encoder_HTML::create_tag("a", $paramsUrl, $label);
 	}  
 
 	//TODO: using tag and a helper's function is not the same, check every functionalities ...
 	/** @param array $params
 	  * @return string */
 	public function img(array $params) {
-		return Incube_Encoder_HTML::createTag("img", $params);
+		return Incube_Encoder_HTML::create_tag("img", $params);
 	}
 
 	/** @param array $params
 	  * @param string JsCode
 	  * @return string */
 	public function script(array $params, $jsCode = "") {
-		return Incube_Encoder_HTML::createTag("script", $params, $jsCode);
+		return Incube_Encoder_HTML::create_tag("script", $params, $jsCode);
 	}
 
 	/** @param array $params
@@ -54,6 +54,6 @@ class Incube_View_Helper_HTML extends Incube_View_Helper_Router {
 		$uri = $this->url($params);
         $params['rel']  = "stylesheet";
         $params['type'] ="text/css";
-		return Incube_Encoder_HTML::createTag("link", $params);
+		return Incube_Encoder_HTML::create_tag("link", $params);
 	}
 }

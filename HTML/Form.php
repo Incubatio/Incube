@@ -79,9 +79,9 @@ class Incube_HTML_Form {
 		foreach($this->_elements as $key => $element) {
 			$content .= ucfirst($this->_labels->$key) . $element->render() . $this->_separator;
 		}
-		$content .= Incube_Encoder_HTML::createTag("input", array( "type" => "submit", "value" => "ok"));
+		$content .= Incube_Encoder_HTML::create_tag("input", array( "type" => "submit", "value" => "ok"));
 		//add variable is prepared ?
-		return Incube_Encoder_HTML::createTag("form", $this->_options, $content);
+		return Incube_Encoder_HTML::create_tag("form", $this->_options, $content);
 	}
 
 	/** @param array $data

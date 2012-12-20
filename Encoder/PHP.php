@@ -1,8 +1,9 @@
 <?php
+namespace Incube\Encoder;
 /** @author incubatio 
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
-class Incube_Encoder_PHP {
+class PHP {
 
   protected static $_indentSize = 2;
 

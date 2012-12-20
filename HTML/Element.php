@@ -1,9 +1,14 @@
 <?php 
+namespace Incube\HTML;
 /** @author incubatio
   * @depandancies Incube_Validator, Incube_HTML, Incube_Filter
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
-class Incube_HTML_Element {
+use Incube\Encoder\HTML;
+use Incube\Filter\HTML as HTMLFilter;
+use Incube\HTML\Element;
+
+class Element {
 
 	/** @var array */
 	protected $_validators = array();
@@ -55,11 +60,11 @@ class Incube_HTML_Element {
 			foreach($this->_options["value"] as $label => $value) {
 				$options = $this->_options;
 				$options["value"] = $value;
-				$html .= Incube_Encoder_HTML::createTag($this->_tag, $options, $label);
+				$html .= HTML::create_tag($this->_tag, $options, $label);
 			}
 		// Generate single tag for a single element
 		} else  {
-			$html = Incube_Encoder_HTML::createTag($this->_tag, $this->_options, $this->_label);
+			$html = HTML::create_tag($this->_tag, $this->_options, $this->_label);
 		}
 		return $html;
 	}
@@ -129,7 +134,7 @@ class Incube_HTML_Element {
 			case "string":
 				$tag = "input";
 				$options2 = array("type" => "text", "value" => $values);
-				$filters[] = new Incube_Filter_HTML();
+				$filters[] = new HTMLFilter();
 			break;
 			case "password":
 				$tag = "input";
@@ -141,7 +146,7 @@ class Incube_HTML_Element {
 				$options2 = array("type" => "text", "style" => "width:100%; min-height:150px;");
 				//$label = $values;
 				$label = $values;
-				$filters[] = new Incube_Filter_HTML();
+				$filters[] = new HTMLFilter();
 			break;
 			case "bool":
 				$tag = "input";
@@ -162,7 +167,7 @@ class Incube_HTML_Element {
 				$tag = "option";
 				foreach($values as $key => $value) {
 					$tmp = in_array($value, $default) ? "$tag selected": $tag; 
-					$label .= Incube_Encoder_HTML::createTag($tag, array("value" => $key), $value);
+					$label .= HTML::create_tag($tag, array("value" => $key), $value);
 				}
 				$tag = "select";
 			break;
@@ -183,7 +188,7 @@ class Incube_HTML_Element {
         $options = array_merge($options, $options2);
 		$options["name"] = "data[$name]";
 		//TODO: add validators
-		$element =  new Incube_HTML_Element($tag, $options, $label);
+		$element =  new Element($tag, $options, $label);
 		$element->setValidators($validators);
 		$element->setFilters($filters);
 		return $element;

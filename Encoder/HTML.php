@@ -1,8 +1,9 @@
 <?php
+namespace Incube\Encoder;
 /** @author incubatio 
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
-class Incube_Encoder_HTML extends Incube_Encoder_XML {
+class HTML extends XML {
 
   protected $_docTypes = array(
       '4'         => array(
@@ -28,7 +29,7 @@ class Incube_Encoder_HTML extends Incube_Encoder_XML {
           unset($data['tag']);
         case array_key_exists('class', $data) || array_key_exists('id', $data):
           if(!isset($tag)) $tag = 'div';
-          $result = self::createTag($tag, $data, $content, $indent);
+          $result = self::create_tag($tag, $data, $content, $indent);
           break;
 
         case array_key_exists('code', $data):
@@ -37,14 +38,14 @@ class Incube_Encoder_HTML extends Incube_Encoder_XML {
           $codeSplitted = preg_split('/ +/', $data['code'], 2); 
           if(count($codeSplitted) == 2 ) list($functionName, $params) = $codeSplitted;
 
-          if(count($codeSplitted) == 2 || Incube_Encoder_PHP::isBlock($data['code'])) {
-            if(Incube_Encoder_PHP::isBlock($functionName)) {
-              $result = Incube_Encoder_PHP::createBlock($functionName, $params, $content, $indent);
+          if(count($codeSplitted) == 2 || PHP::isBlock($data['code'])) {
+            if(PHP::isBlock($functionName)) {
+              $result = PHP::createBlock($functionName, $params, $content, $indent);
             } else {
               $result = $this->exec($functionName, $params, $data['silent'], $indent);
             }
           } else {
-            $result = Incube_Encoder_PHP::createEmbededPHP($data['code'], $data['silent'], $indent);
+            $result = PHP::createEmbededPHP($data['code'], $data['silent'], $indent);
           }
           break;
 
@@ -74,7 +75,7 @@ class Incube_Encoder_HTML extends Incube_Encoder_XML {
         if($param[0] == ':') $params[$key] = '"' . substr($param, 1) . '"';
       }
       $result = $functionName . '(' . implode(', ', $params) . ');';
-    return self::_indent($indent) . Incube_Encoder_PHP::createEmbededPHP($result, $silent);
+    return self::_indent($indent) . PHP::createEmbededPHP($result, $silent);
 
   }
 }

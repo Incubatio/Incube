@@ -1,8 +1,9 @@
 <?php
+namespace Incube\Encoder;
 /** @author incubatio 
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
-class Incube_Encoder_HTML extends Incube_Encoder_XML {
+class XHTML extends XML {
 
   protected $_docTypes = array(
 
@@ -49,6 +50,6 @@ class Incube_Encoder_HTML extends Incube_Encoder_XML {
     $tag = $data['tag'];
     unset($data['tag']);
 
-    return Incube_Encoder_HTML::createTag($tag, $data, $content, $indent);
+    return HTML::create_tag($tag, $data, $content, $indent);
   }
 }

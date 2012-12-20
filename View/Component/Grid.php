@@ -1,9 +1,12 @@
 <?php
+namespace Incube\View\Component;
 /** @author incubatio 
   * @depandancy Incube_HTML
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   */
-class Incube_View_Component_Grid {
+
+use Incube\Encoder\HTML;
+class Grid {
 	
 	/** @var array */
     protected $_data = array();
@@ -37,7 +40,7 @@ class Incube_View_Component_Grid {
             foreach($params as $param) {
                 $paramsUrl[] = $param . DIRECTORY_SEPARATOR . $data[$param];
             }
-            $this->_data[$key][$columnTitle] = $temp . ' ' . Incube_Encoder_HTML::createTag("a", array("href" => $actionUrl . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR,$paramsUrl)), $actionLabel);
+            $this->_data[$key][$columnTitle] = $temp . ' ' . HTML::create_tag("a", array("href" => $actionUrl . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR,$paramsUrl)), $actionLabel);
             //Zend_Debug::dump($this->_data[$key][$columnTitle]);
         }
     }

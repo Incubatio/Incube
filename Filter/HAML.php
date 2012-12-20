@@ -1,5 +1,7 @@
 <?php
-class Incube_Filer_HAML {
+namespace Incube\Filter;
+use Incube\Encoder\HTML;
+class HAML {
 
   protected function _resolve($line, $content = '') {
     list($num, $indent, $data) = $line;
@@ -11,7 +13,7 @@ class Incube_Filer_HAML {
     unset($data['tag']);
 
     $out = array();
-    return Incube_Encoder_HTML::createTag($tag, $data, $content, $indent);
+    return HTML::create_tag($tag, $data, $content, $indent);
     //return implode("\n", $out);
   }
 
